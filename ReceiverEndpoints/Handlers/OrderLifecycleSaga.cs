@@ -19,18 +19,21 @@ namespace ReceiverEndpoints.Handlers
         public void Handle(OrderSubmitted message)
         {
             Data.OrderId = message.OrderId;
+            Data.ThrowSagaTimeoutException = message.ThrowSagaTimeoutException;
 
             #region Timeout
 
             RequestTimeout<OrderTimeout>(TimeSpan.FromSeconds(5));
 
             #endregion
+
+            if (message.ThrowSagaTransportException) throw new Exception("Blow up!");
+            Console.WriteLine("Saga Handler Finished");
         }
 
         public void Timeout(OrderTimeout state)
-        {
-            var throwException = false;
-            if (throwException) throw new Exception("Blow up!");
+        {            
+            if (Data.ThrowSagaTimeoutException) throw new Exception("Blow up!");
             Console.WriteLine("Got timeout");
         }
     }

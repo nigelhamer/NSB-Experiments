@@ -1,4 +1,5 @@
-﻿using NServiceBus;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NServiceBus;
 using Shared;
 using System;
 using System.Data.SqlClient;
@@ -6,63 +7,37 @@ using System.Threading.Tasks;
 
 namespace NSBBehaviourTest
 {
-    public static class Helpers
+    internal static class Helpers
     {
         public const string DB_SENDER_CONNECTION = @"Data Source = (localdb)\ProjectsV12;Initial Catalog = sender; Integrated Security = True";
         public const string DB_RECEIVE_CONNECTION = @"Data Source = (localdb)\ProjectsV12;Initial Catalog = receiver; Integrated Security = True";
 
+
+        public static void Assert_SagaDataTransactionCommitted(string orderId)
+        {
+            Assert.AreEqual(1, Helpers.CountOrderSagaRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+        }
+
+        public static void Assert_OrderTransactionCommitted(string orderId)
+        {
+            Assert.AreEqual(1, Helpers.CountOrderRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+        }
+
+        public static void Assert_Failed_SagaDataTransactionCommitted(string orderId)
+        {
+            Assert.AreEqual(0, Helpers.CountOrderSagaRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+        }
+
+        public static void Assert_Failed_OrderTransactionCommitted(string orderId)
+        {
+            Assert.AreEqual(0, Helpers.CountOrderRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+        }
+
+
         public static async Task PutTaskDelay()
         {
             await Task.Delay(10000);
-        }  
-
-        public static void SubmitOrder(Random random, string orderId, BusConfiguration busConfiguration)
-        {
-            using (IBus bus = Bus.Create(busConfiguration).Start())
-            {
-                bus.Publish(new OrderSubmitted
-                {
-                    OrderId = orderId,
-                    Value = random.Next(100),
-                    ThrowDataException = false,
-                    ThrowTransportException = false
-                });
-            }
-        }
-        public static void SubmitOrder_TransportException(Random random, string orderId, BusConfiguration busConfiguration)
-        {
-            using (IBus bus = Bus.Create(busConfiguration).Start())
-            {
-                bus.Publish(new OrderSubmitted
-                {
-                    OrderId = orderId,
-                    Value = random.Next(100),
-                    ThrowDataException = false,
-                    ThrowTransportException = true
-                });
-            }
-        }
-
-        public static BusConfiguration CreateCommonConfig()
-        {
-            #region Sender Configuration
-
-            BusConfiguration busConfiguration = new BusConfiguration();
-            busConfiguration.EndpointName("Sender");
-
-            busConfiguration.EnableInstallers();
-            busConfiguration.UseSerialization<JsonSerializer>();
-
-            busConfiguration.ScaleOut().UseSingleBrokerQueue();
-
-            busConfiguration.UsePersistence<NHibernatePersistence>();
-
-            busConfiguration.EnableOutbox();
-
-            #endregion
-
-            return busConfiguration;
-        }
+        }      
 
         public static int CountOrderRecords(string connection, string orderId)
         {

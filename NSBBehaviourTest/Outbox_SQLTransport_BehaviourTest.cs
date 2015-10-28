@@ -32,45 +32,63 @@ namespace NSBBehaviourTest
         {
             //Arrange
             SharedState.HandleSuccessMessage = "";
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
-            Random random = new Random();
-            string orderId = new string(Enumerable.Range(0, 4).Select(x => letters[random.Next(letters.Length)]).ToArray());
 
-            BusConfiguration busConfiguration = Helpers.CreateCommonConfig();
-            busConfiguration.UseTransport<SqlServerTransport>();
+            Client client = new Client();
+            string orderId = Client.GetRandomOrderId();
 
-            //Act
-            Helpers.SubmitOrder(random, orderId, busConfiguration);
+            using (IBus bus = client.StartSQLEndpoint())
+            {
+                //Act
+                client.SubmitOrder(orderId, bus);
+            }
 
             // Assert
             await Helpers.PutTaskDelay();
-
-            Assert.AreEqual(1, Helpers.CountOrderRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
-            Assert.AreEqual(1, Helpers.CountOrderSagaRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+            Helpers.Assert_OrderTransactionCommitted(orderId);
+            Helpers.Assert_SagaDataTransactionCommitted(orderId);
             //Assert.AreEqual(string.Format("Order {0} accepted.", orderId), SharedState.HandleSuccessMessage);
         }
-
+        
         [TestMethod]
         public async Task Outbox_SQLTransport_RollsbackSagaAndDataOnTransportException()
         {
             //Arrange
-            SharedState.HandleSuccessMessage = "";
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
-            Random random = new Random();
-            string orderId = new string(Enumerable.Range(0, 4).Select(x => letters[random.Next(letters.Length)]).ToArray());
+            Client client = new Client();
+            string orderId = Client.GetRandomOrderId();
 
-            BusConfiguration busConfiguration = Helpers.CreateCommonConfig();
-            busConfiguration.UseTransport<SqlServerTransport>();
-
-            //Act
-            Helpers.SubmitOrder_TransportException(random, orderId, busConfiguration);
+            using (IBus bus = client.StartSQLEndpoint())
+            {
+                //Act
+                client.SubmitOrder_TransportException(orderId, bus);
+            }
 
             // Assert
             await Helpers.PutTaskDelay();
 
-            Assert.AreEqual(0, Helpers.CountOrderRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
-            Assert.AreEqual(0, Helpers.CountOrderSagaRecords(Helpers.DB_RECEIVE_CONNECTION, orderId));
+            Helpers.Assert_Failed_OrderTransactionCommitted(orderId);
+            Helpers.Assert_Failed_SagaDataTransactionCommitted(orderId);
             //Assert.AreEqual("", SharedState.HandleSuccessMessage);
-        }     
+        }
+
+        [TestMethod]
+        public async Task Outbox_SQLSagaTransport_RollsbackSagaAndDataOnTransportException()
+        {
+            //Arrange
+            Client client = new Client();
+            string orderId = Client.GetRandomOrderId();
+
+            using (IBus bus = client.StartSQLEndpoint())
+            {
+                //Act
+                client.SubmitOrder_SagaTransportException(orderId, bus);
+            }
+
+            // Assert
+            await Helpers.PutTaskDelay();
+
+            Helpers.Assert_Failed_OrderTransactionCommitted(orderId);
+            Helpers.Assert_Failed_SagaDataTransactionCommitted(orderId);
+            //Assert.AreEqual("", SharedState.HandleSuccessMessage);           
+        }
     }
 }
