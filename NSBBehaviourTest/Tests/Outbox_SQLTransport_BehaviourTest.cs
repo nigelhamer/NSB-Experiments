@@ -21,7 +21,7 @@ namespace NSBBehaviourTest
         [TestCleanup]
         public void TestCleanup()
         {
-            Helpers.CleanUpReceiverData();
+            Helpers.CleanupOrders();
             Helpers.CleanUpReceiverQueues();           
             Helpers.CleanUpSenderQueues();
         }    
@@ -44,7 +44,7 @@ namespace NSBBehaviourTest
             // Assert
             await Helpers.PutTaskDelay();
             Helpers.Assert_OrderTransactionCommitted(orderId);
-            Helpers.Assert_SagaDataTransactionCommitted(orderId);
+            Helpers.Assert_SagaDataTransactionCommitted_InSharedDB(orderId);
             //Assert.AreEqual(string.Format("Order {0} accepted.", orderId), SharedState.HandleSuccessMessage);
         }
         
@@ -65,7 +65,7 @@ namespace NSBBehaviourTest
             await Helpers.PutTaskDelay();
 
             Helpers.Assert_Failed_OrderTransactionCommitted(orderId);
-            Helpers.Assert_Failed_SagaDataTransactionCommitted(orderId);
+            Helpers.Assert_Failed_SagaDataTransactionCommitted_InSharedDB(orderId);
             //Assert.AreEqual("", SharedState.HandleSuccessMessage);
         }
 
@@ -86,7 +86,7 @@ namespace NSBBehaviourTest
             await Helpers.PutTaskDelay();
 
             Helpers.Assert_Failed_OrderTransactionCommitted(orderId);
-            Helpers.Assert_Failed_SagaDataTransactionCommitted(orderId);
+            Helpers.Assert_Failed_SagaDataTransactionCommitted_InSharedDB(orderId);
             //Assert.AreEqual("", SharedState.HandleSuccessMessage);           
         }
     }

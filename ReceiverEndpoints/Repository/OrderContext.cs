@@ -10,12 +10,12 @@ namespace ReceiverEndpoints.Repository
     class OrderContext : DbContext
     {
         public OrderContext()
-            : base("name=NServiceBus/Persistence")
+            : base(EndpointConfig.DB_BUSINESS_CONNECTION)
         {
         }
 
         public OrderContext(IDbConnection connection)
-            : base((DbConnection) connection, false)
+            : base((DbConnection)connection, false)
         {
         }
 

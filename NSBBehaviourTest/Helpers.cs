@@ -8,39 +8,45 @@ using System.Threading.Tasks;
 namespace NSBBehaviourTest
 {
     internal static class Helpers
-    {
-        public const string DB_SENDER_CONNECTION = @"Data Source = (localdb)\ProjectsV12;Initial Catalog = sender; Integrated Security = True";
-        public const string DB_RECEIVE_CONNECTION = @"Data Source = (localdb)\ProjectsV12;Initial Catalog = receiver; Integrated Security = True";
-
-
-        public static void Assert_SagaDataTransactionCommitted(string orderId)
+    {        
+        public static void Assert_SagaDataTransactionCommitted_InSharedDB(string orderId)
         {
-            Assert.AreEqual(1, CountReceiverSagaRecords(orderId), "Saga Data Missing");
+            Assert.AreEqual(1, CountSharedSagaRecords(orderId), "Saga Data Missing");
+        }
+
+        public static void Assert_SagaDataTransactionCommitted_InBusinessDB(string orderId)
+        {
+            Assert.AreEqual(1, CountBusinessSagaRecords(orderId), "Saga Data Missing");
         }
 
         public static void Assert_OrderTransactionCommitted(string orderId)
         {
-            Assert.AreEqual(1, CountReceiverOrderRecords(orderId), "Business Data Missing");
+            Assert.AreEqual(1, CountBusinessOrderRecords(orderId), "Business Data Missing");
         }
 
-        public static void Assert_Failed_SagaDataTransactionCommitted(string orderId)
+        public static void Assert_Failed_SagaDataTransactionCommitted_InSharedDB(string orderId)
         {
-            Assert.AreEqual(0, CountReceiverSagaRecords(orderId), "Unexpected Saga Data Found");
+            Assert.AreEqual(0, CountSharedSagaRecords(orderId), "Unexpected Saga Data Found");
+        }
+
+        public static void Assert_Failed_SagaDataTransactionCommitted_InBusinessDB(string orderId)
+        {
+            Assert.AreEqual(0, CountBusinessOrderRecords(orderId), "Unexpected Saga Data Found");
         }
 
         public static void Assert_Failed_OrderTransactionCommitted(string orderId)
         {
-            Assert.AreEqual(0, CountReceiverOrderRecords(orderId), "Unexpected Business Data Found");
+            Assert.AreEqual(0, CountBusinessOrderRecords(orderId), "Unexpected Business Data Found");
         }
 
-        public static void Assert_OutboxWasUsed()
+        public static void Assert_OutboxWasUsed_InBusinessDB()
         {
-            Assert.AreEqual(1, CountSenderOutboxRecords(), "Outbox was not used");
+            Assert.AreEqual(2, CountBusinessOutboxRecords(), "Outbox was not used");
         }
 
-        public static void Assert_OutboxWasNotUsedOrRollbacked()
+        public static void Assert_OutboxWasNotUsedOrWasRolledBack_InBusinessDB()
         {
-            Assert.AreEqual(0, CountSenderOutboxRecords(), "Outbox contains record where none were expected.");
+            Assert.AreEqual(0, CountBusinessOutboxRecords(), "Outbox contains record where none were expected.");
         }
 
         public static async Task PutTaskDelay()
@@ -50,9 +56,9 @@ namespace NSBBehaviourTest
 
         #region Validate Data  
 
-        public static int CountReceiverOrderRecords(string orderId)
+        public static int CountBusinessOrderRecords(string orderId)
         {
-            using (SqlConnection conn = new SqlConnection(DB_RECEIVE_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
             {
                 conn.Open();
                 SqlCommand comm = new SqlCommand(string.Format("SELECT COUNT(*) FROM Orders WHERE OrderId='{0}'", orderId), conn);
@@ -60,9 +66,9 @@ namespace NSBBehaviourTest
             }
         }
 
-        public static int CountReceiverSagaRecords(string orderId)
+        public static int CountSharedSagaRecords(string orderId)
         {
-            using (SqlConnection conn = new SqlConnection(DB_RECEIVE_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_SHARED_CONNECTION))
             {
                 conn.Open();
                 SqlCommand comm = new SqlCommand(string.Format("SELECT COUNT(*) FROM OrderLifecycleSagaData WHERE OrderId='{0}'", orderId), conn);
@@ -70,9 +76,19 @@ namespace NSBBehaviourTest
             }
         }
 
-        public static int CountSenderOutboxRecords()
+        public static int CountBusinessSagaRecords(string orderId)
         {
-            using (SqlConnection conn = new SqlConnection(DB_SENDER_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
+            {
+                conn.Open();
+                SqlCommand comm = new SqlCommand(string.Format("SELECT COUNT(*) FROM OrderLifecycleSagaData WHERE OrderId='{0}'", orderId), conn);
+                return (Int32)comm.ExecuteScalar();
+            }
+        }
+
+        public static int CountBusinessOutboxRecords()
+        {
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
             {
                 conn.Open();
                 SqlCommand comm = new SqlCommand("SELECT COUNT(*) FROM OutboxRecord", conn);
@@ -84,34 +100,42 @@ namespace NSBBehaviourTest
 
         #region Cleanup 
 
-        public static void CleanUpReceiverData()
+        public static void CleanupOrders()
         {
-            using (SqlConnection conn = new SqlConnection(DB_RECEIVE_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
             {
                 conn.Open();
 
                 SqlCommand comm = new SqlCommand("DELETE FROM Orders", conn);
-                comm.ExecuteNonQuery();
-
-                comm = new SqlCommand("DELETE FROM OrderLifecycleSagaData", conn);
-                comm.ExecuteNonQuery();                
+                comm.ExecuteNonQuery();                              
             }
         }
 
-        public static void CleanUpReceiverOutbox()
+        public static void CleanupNSBPersistenceTable_FromBusiness()
         {
-            using (SqlConnection conn = new SqlConnection(DB_RECEIVE_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
             {
                 conn.Open();
 
-                SqlCommand comm = new SqlCommand("DELETE FROM OutboxRecord", conn);
+                SqlCommand comm = new SqlCommand("DELETE FROM OrderLifecycleSagaData", conn);
+                comm.ExecuteNonQuery();
+            }
+        }
+
+        public static void CleanupNSBPersistenceTable_FromShared()
+        {
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_SHARED_CONNECTION))
+            {
+                conn.Open();
+
+                SqlCommand comm = new SqlCommand("DELETE FROM OrderLifecycleSagaData", conn);
                 comm.ExecuteNonQuery();
             }
         }
 
         public static void CleanUpReceiverQueues()
         {
-            using (SqlConnection conn = new SqlConnection(DB_RECEIVE_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_RECEIVE_CONNECTION))
             {
                 conn.Open();
 
@@ -125,7 +149,7 @@ namespace NSBBehaviourTest
 
         public static void CleanUpSenderQueues()
         {
-            using (SqlConnection conn = new SqlConnection(DB_SENDER_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_SENDER_CONNECTION))
             {
                 conn.Open();
 
@@ -137,9 +161,9 @@ namespace NSBBehaviourTest
             }
         }
 
-        public static void CleanUpSenderOutbox()
+        public static void CleanUpBusinessOutbox()
         {
-            using (SqlConnection conn = new SqlConnection(DB_SENDER_CONNECTION))
+            using (SqlConnection conn = new SqlConnection(EndpointConfig.DB_BUSINESS_CONNECTION))
             {
                 conn.Open();
 

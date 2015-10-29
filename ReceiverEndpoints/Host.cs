@@ -1,13 +1,11 @@
 ﻿using NServiceBus;
-using NServiceBus.Transports.SQLServer;
 using System;
 using System.Configuration;
 
 namespace ReceiverEndpoints
 {
     class Host
-    {
-        
+    {        
         static void Main()
         {
             var azure = bool.Parse(ConfigurationManager.AppSettings["UseAzureTransport"]);
@@ -16,7 +14,7 @@ namespace ReceiverEndpoints
             BusConfiguration busConfiguration = null;
             if (azure)
             {
-                busConfiguration = EndpointConfig.CreateAzureBusConfiguration(azureSBConnection, false);
+                busConfiguration = EndpointConfig.CreateAzureBusConfiguration(azureSBConnection, true, false);               
             }
             else
             {
@@ -30,6 +28,4 @@ namespace ReceiverEndpoints
             }
         }        
     }
-
-
 }
