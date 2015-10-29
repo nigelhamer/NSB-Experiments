@@ -1,0 +1,14 @@
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\bin\Debug\Shared.dll
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\bin\Debug\Shared.pdb
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\bin\Debug\NServiceBus.Core.dll
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\bin\Debug\NServiceBus.Core.pdb
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\bin\Debug\NServiceBus.Core.xml
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\obj\Debug\Shared.dll
+C:\Users\nigel\CodeRoot\Samples\NSB Experiments\NSB Experiments\Shared\obj\Debug\Shared.pdb
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\bin\Debug\Shared.dll
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\bin\Debug\Shared.pdb
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\bin\Debug\NServiceBus.Core.dll
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\bin\Debug\NServiceBus.Core.pdb
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\bin\Debug\NServiceBus.Core.xml
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\obj\Debug\Shared.dll
+C:\Users\nigel\CodeRoot\my work\NSB-Experiments\Shared\obj\Debug\Shared.pdb

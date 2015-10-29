@@ -81,6 +81,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
@@ -98,7 +99,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CommonEndpointConfig.cs" />
+    <Compile Include="EndpointConfig.cs" />
     <Compile Include="Handlers\OrderLifecycleSaga.cs" />
     <Compile Include="Handlers\OrderLifecycleSagaData.cs" />
     <Compile Include="Handlers\OrderSubmittedHandler.cs" />
@@ -107,9 +108,13 @@
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrderMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\OrderContext.cs" />
+    <Compile Include="Repository\OrderRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="app.private.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

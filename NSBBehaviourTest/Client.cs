@@ -13,49 +13,15 @@ namespace NSBBehaviourTest
             Random random = new Random();
             return new string(Enumerable.Range(0, 4).Select(x => letters[random.Next(letters.Length)]).ToArray());
         }
-
-        private  BusConfiguration CreateCommonConfig()
-        {
-            #region Basic Sender Configuration
-
-            BusConfiguration busConfiguration = new BusConfiguration();
-            busConfiguration.EndpointName("Sender");
-
-            busConfiguration.EnableInstallers();
-            busConfiguration.UseSerialization<JsonSerializer>();
-            busConfiguration.ScaleOut().UseSingleBrokerQueue();
-            busConfiguration.UsePersistence<NHibernatePersistence>();
-            busConfiguration.EnableOutbox();
-
-            #endregion
-
-            return busConfiguration;
-        }
-
-        private BusConfiguration CreateAzureBusConfiguration(string azureSBConnection)
-        {
-            BusConfiguration busConfiguration = CreateCommonConfig();
-            busConfiguration.UseTransport<AzureServiceBusTransport>()
-                .ConnectionString(azureSBConnection);
-
-            return busConfiguration;
-        }
         
-        public IBus StartAzureEndpoint(string azureSBConnection) {
-            return Bus.Create(CreateAzureBusConfiguration(azureSBConnection)).Start();
-        }
-
-        private BusConfiguration CreateSQLConfiguration()
+        public IBus StartAzureEndpoint(string azureSBConnection, bool useOutbox)
         {
-            BusConfiguration busConfiguration = CreateCommonConfig();
-            busConfiguration.UseTransport<SqlServerTransport>();
+            return Bus.Create(EndpointConfig.CreateAzureBusConfiguration(azureSBConnection, useOutbox)).Start();
+        }        
 
-            return busConfiguration;
-        }
-
-        public IBus StartSQLEndpoint()
+        public IBus StartSQLEndpoint(bool useOutbox)
         {
-            return Bus.Create(CreateSQLConfiguration()).Start();
+            return Bus.Create(EndpointConfig.CreateSQLConfiguration(useOutbox)).Start();
         }
 
         public void SubmitOrder(string orderId, IBus bus)

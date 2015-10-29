@@ -11,7 +11,7 @@ namespace ClientEndpoint
             Client client = new Client();           
             string azureSBConnection = System.Configuration.ConfigurationManager.AppSettings["AzureConnection"];
 
-            using (IBus bus = client.StartAzureEndpoint(azureSBConnection))
+            using (IBus bus = client.StartAzureEndpoint(azureSBConnection, true))
             //using (IBus bus = client.StartSQLEndpoint())
             {
                 Console.WriteLine("Press enter to publish a message");
@@ -27,9 +27,9 @@ namespace ClientEndpoint
                     }
                     string orderId = Client.GetRandomOrderId();
 
-                    //client.SubmitOrder(orderId, bus);
+                    client.SubmitOrder(orderId, bus);
                     //client.SubmitOrder_TransportException(orderId, bus);
-                    client.SubmitOrder_SagaTransportException(orderId, bus);
+                    //client.SubmitOrder_SagaTransportException(orderId, bus);
                     //client.SubmitOrder_SagaTimeoutException(orderId, bus);
                 }
 

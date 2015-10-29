@@ -1,7 +1,11 @@
 ﻿using NHibernate;
 using NServiceBus;
+using NServiceBus.Persistence.NHibernate;
+using ReceiverEndpoints.Repository;
 using Shared;
 using System;
+using System.Data.Common;
+using System.Data.Entity;
 
 namespace ReceiverEndpoints.Handlers
 {
@@ -11,6 +15,13 @@ namespace ReceiverEndpoints.Handlers
 
         public IBus Bus { get; set; }
         public ISession Session { get; set; }
+        public NHibernateStorageContext StorageContext { get; set; }
+
+        public OrderSubmittedHandler(IBus bus, NHibernateStorageContext storageContext)
+        {
+            this.Bus = bus;
+            this.StorageContext = storageContext;
+        }
 
         public void Handle(OrderSubmitted message)
         {
@@ -18,11 +29,22 @@ namespace ReceiverEndpoints.Handlers
 
             #region StoreUserData    
 
-            Session.Save(new Model.Order
+            //Session.Save(new Model.Order
+            //{
+            //    OrderId = message.OrderId,
+            //    Value = message.Value
+            //});
+
+            using (OrderContext ctx = new OrderContext(StorageContext.Connection))
             {
-                OrderId = message.OrderId,
-                Value = message.Value
-            });
+                ctx.Database.UseTransaction((DbTransaction)StorageContext.DatabaseTransaction);
+                var repo = new OrderRepository(ctx);
+                repo.InsertOrder(new Model.Order
+                {
+                    OrderId = message.OrderId,
+                    Value = message.Value
+                });
+            }
 
             #endregion
 

@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NServiceBus.Azure.Transports.WindowsAzureServiceBus</name>
+    </assembly>
+    <members>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.ICreateSubscriptionClients">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.ICreateTopicClients">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.ICreateTopicClients.Create(Microsoft.ServiceBus.Messaging.TopicDescription,Microsoft.ServiceBus.Messaging.MessagingFactory)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.Transports.ICreateQueues">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.Transports.ICreateQueues.Create(NServiceBus.Address)">
+            <summary>
+            
+            </summary>
+            <param name="address"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.ICreateQueueClients">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.ICreateQueueClients.Create(Microsoft.ServiceBus.Messaging.QueueDescription,Microsoft.ServiceBus.Messaging.MessagingFactory)">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.QueueAndTopicByEndpoint.QueueAndTopicByEndpointTopology">
+            <summary>
+            Sends occur through queues, one for each endpoint, 
+            publishes through a topic per endpoint, 
+            receives on both it's own queue &amp; subscriptions per datatype
+            </summary>
+        </member>
+        <member name="T:NServiceBus.AzureServiceBusTransport">
+            <summary>
+            Transport definition for WindowsAzureServiceBus    
+            </summary>
+        </member>
+        <member name="M:NServiceBus.AzureServiceBusTransport.Configure(NServiceBus.BusConfiguration)">
+            <summary>
+            Gives implementations access to the <see cref="T:NServiceBus.BusConfiguration"/> instance at configuration time.
+            </summary>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultIssuerName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultLockDuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultMaxSizeInMegabytes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultRequiresDuplicateDetection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultRequiresSession">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultDefaultMessageTimeToLive">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultEnableDeadLetteringOnMessageExpiration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.EnableDeadLetteringOnFilterEvaluationExceptions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultDuplicateDetectionHistoryTimeWindow">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultMaxDeliveryCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultEnableBatchedOperations">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultQueuePerInstance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultBackoffTimeInSeconds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultServerWaitTime">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultConnectivityMode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultConnectionString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultBatchSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultEnablePartitioning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServicebusDefaults.DefaultSupportOrdering">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServiceBusDequeueStrategy">
+            <summary>
+            Azure service bus implementation if <see cref="T:NServiceBus.Transports.IDequeueMessages"/>.
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServiceBusDequeueStrategy.Init(NServiceBus.Address,NServiceBus.Unicast.Transport.TransactionSettings,System.Func{NServiceBus.TransportMessage,System.Boolean},System.Action{NServiceBus.TransportMessage,System.Exception})">
+            <summary>
+            Initializes the <see cref="T:NServiceBus.Transports.IDequeueMessages"/>.
+            </summary>
+            <param name="address">The address to listen on.</param>
+            <param name="transactionSettings">The <see cref="T:NServiceBus.Unicast.Transport.TransactionSettings"/> to be used by <see cref="T:NServiceBus.Transports.IDequeueMessages"/>.</param>
+            <param name="tryProcessMessage">Called when a message has been dequeued and is ready for processing.</param>
+            <param name="endProcessMessage">Needs to be called by <see cref="T:NServiceBus.Transports.IDequeueMessages"/> after the message has been processed regardless if the outcome was successful or not.</param>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServiceBusDequeueStrategy.Start(System.Int32)">
+            <summary>
+            Starts the dequeuing of message using the specified <paramref name="maximumConcurrencyLevel"/>.
+            </summary>
+            <param name="maximumConcurrencyLevel">Indicates the maximum concurrency level this <see cref="T:NServiceBus.Transports.IDequeueMessages"/> is able to support.</param>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServiceBusDequeueStrategy.Stop">
+            <summary>
+                Stops the dequeuing of messages.
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.AzureServiceBusTopicSubscriptionManager.GetAddressesForMessageType(System.Type)">
+            <summary>
+            Gets the destination address For a message type.
+            </summary>
+            <param name="messageType">The message type to get the destination for.</param>
+            <returns>The address of the destination associated with the message type.</returns>
+        </member>
+        <member name="T:NServiceBus.Azure.Transports.WindowsAzureServiceBus.Transports.ICreateTopics">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:NServiceBus.Azure.Transports.WindowsAzureServiceBus.Transports.ICreateTopics.Create(NServiceBus.Address)">
+            <summary>
+            
+            </summary>
+            <param name="address"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
